@@ -1,0 +1,100 @@
+---
+# tasks file for k8s_master
+- name: Installing  Docker
+  package:
+       name: "docker"
+       state: present
+
+- name: Enable Docker Services
+  service:
+       name: "docker"
+       state: started
+       enabled: yes
+
+- name: Configuring Kubernetes Repo
+  yum_repository:
+       name: "kubernetes"
+       description: "kubernetes"
+       baseurl: https://packages.cloud.google.com/yum/repos/kubernetes-el7-\$basearch
+       gpgcheck: yes
+       enabled: yes
+       repo_gpgcheck: yes
+       gpgkey:
+          - https://packages.cloud.google.com/yum/doc/yum-key.gpg
+          - https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+       exclude: kubelet kubeadm kubectl
+       state: present
+
+- name: Importing the keys for repo
+  rpm_key:
+       key: "{{ item  }}"
+       state: present
+  loop:
+   - https://packages.cloud.google.com/yum/doc/yum-key.gpg
+   - https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+
+- name: Installing kubelet kubeadm and kubectl
+  yum:
+       name: "{{ pckgs }}"
+       state: present
+       disable_excludes: kubernetes
+  vars:
+       pckgs:
+        - kubelet
+        - kubeadm
+        - kubectl
+
+- name: Starting kubelet services
+  service:
+       name: kubelet
+       state: started
+       enabled: yes
+
+- name: Change Cgroup Drivers of Docker
+  copy:
+       content: {
+  "exec-opts": ["native.cgroupdriver=systemd"]
+}
+       dest: /etc/docker/daemon.json
+
+- name: Restarting services
+  service:
+       name: docker
+       state: restarted
+
+- name: Install iproute-tc
+  yum:
+       name: iproute-tc
+       state: present
+
+- name: Pulling images
+  command:
+       cmd: "kubeadm config images pull"
+
+- name: Initiating master
+  command:
+       cmd: "kubeadm init --pod-network-cidr=10.244.0.0/16 --ignore-preflight-errors=NumCPU --ignore-preflight-errors=Mem"
+
+- name: Further Configuration
+  command:
+       cmd: "mkdir -p $HOME/.kube"
+
+- name: Further Configuration
+  command:
+       cmd: "sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config"
+
+- name: Almost Done!
+  shell:
+       cmd: "sudo chown $(id -u):$(id -g) $HOME/.kube/config"
+
+
+- name: Free some buffer
+  command:
+      cmd: "echo 3 > /proc/sys/vm/drop_caches"
+
+
+- name: Setting overlay Network Flannel
+  command:
+       cmd: "kubectl apply  -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml"
+
+
