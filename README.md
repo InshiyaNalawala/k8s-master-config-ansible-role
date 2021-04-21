@@ -53,5 +53,5 @@ Example Playbook
 
     - hosts: tag_kubernetes_master
       roles:
-         - role: k8s_master
+         - role: "k8s_master_config_ansible_role"
 
