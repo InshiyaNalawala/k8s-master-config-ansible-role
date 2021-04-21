@@ -7,23 +7,23 @@ Requirements
 ------------
 
 1. Provisioned instances on AWS (use the 'cluster' role - https://github.com/InshiyaNalawala/kubernetes-cluster/tree/master/roles/cluster )
-``
+```
 ansible-galaxy install inshiyanalawala.k8s_cluster_on_aws
-``
+```
 
 2. Edit the k8s_cluster_on_aws/vars/main.yml file 
    Provide valid credentials and configuration of the instances here to be used by the role to provision cluster 
 
-  ```- hosts: localhost
-    ```roles:
-     ``- role: "k8s_cluster_on_aws"
+  ```
+  - hosts: localhost
+    roles:
+     - role: "k8s_cluster_on_aws"
 ```
 
 Now, after provisiong the cluster on AWS, configure dynamic ec2 inventory to be able to configure the instances on AWS.
 
 ``` wget https://raw.githubusercontent.com/vshn/ansible-dynamic-inventory-ec2/master/ec2.py
-```
-``` wget https://raw.githubusercontent.com/vshn/ansible-dynamic-inventory-ec2/master/ec2.ini
+    wget https://raw.githubusercontent.com/vshn/ansible-dynamic-inventory-ec2/master/ec2.ini
 ```
 Next, export a few variables 
 
@@ -42,8 +42,10 @@ Configure ssh-agent forwarding to log into instances with your key.
 ```
 Finally, make the script files excutable
 
-``` chmod +x e2.py
-    chmod +x ec2.ini
+``` 
+chmod +x e2.py
+    
+chmod +x ec2.ini
 ```    
     
 Example Playbook
