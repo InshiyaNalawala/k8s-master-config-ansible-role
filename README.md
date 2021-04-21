@@ -8,7 +8,7 @@ Requirements
 
 1. Provisioned instances on AWS (use the 'cluster' role - https://github.com/InshiyaNalawala/kubernetes-cluster/tree/master/roles/cluster )
 
-½ ansible-galaxy install inshiyanalawala.k8s_cluster_on_aws
+# ansible-galaxy install inshiyanalawala.k8s_cluster_on_aws
 
 2. Edit the k8s_cluster_on_aws/vars/main.yml file 
    Provide valid credentials and configuration of the instances here to be used by the role to provision cluster 
