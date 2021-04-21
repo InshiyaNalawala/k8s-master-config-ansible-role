@@ -8,7 +8,7 @@ Requirements
 
 1. Provisioned instances on AWS (use the 'cluster' role - https://github.com/InshiyaNalawala/kubernetes-cluster/tree/master/roles/cluster )
 
-¼ ansible-galaxy install inshiyanalawala.k8s_cluster_on_aws
+½ ansible-galaxy install inshiyanalawala.k8s_cluster_on_aws
 
 2. Edit the k8s_cluster_on_aws/vars/main.yml file 
    Provide valid credentials and configuration of the instances here to be used by the role to provision cluster 
@@ -26,9 +26,13 @@ Now, after provisiong the cluster on AWS, configure dynamic ec2 inventory to be 
 Next, export a few variables 
 
 ¼ export AWS_ACCESS_KEY_ID=’<your access key>'
+   
 ¼ export AWS_SECRET_ACCESS_KEY=’<your secret key>'
+   
 ¼ export EC2_INI_PATH=/path/to/my_ec2.ini
+
 ¼ export ANSIBLE_HOSTS=/path/to/ec2.py
+    
     
 Configure ssh-agent forwarding to log into instances with your key. 
 1. Copy the .pem key file used to configure instances in the ~/.ssh directory on your system
